@@ -31,4 +31,8 @@
 10. run the app \
 ```python app.py```
    
+   or
+
+```python3 app.py```
+
 11. CTRL+C to quit and type ```deactivate```
