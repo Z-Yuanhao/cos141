@@ -1,3 +1,4 @@
+# COS141
 # Demo project for database course
 
 ## Setup Instructions:
