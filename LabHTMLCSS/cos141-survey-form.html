@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>COS141 Class Survey Form</title>
+</head>
+<body>
+    <main>
+        <h1>COS141 Class Survey Form</h1>
+        <form id="survey-form">
+            <div>
+                <label for="name">Student Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div>
+                <label for="email">Student Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div>
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" min="1" max="150">
+            </div>
+
+            <div>
+                <label for="feedback-type">Type of Feedback:</label>
+                <select id="feedback-type" name="feedback-type">
+                    <option value="positive">Positive</option>
+                    <option value="negative">Negative</option>
+                    <option value="suggestion">Suggestion</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="class-type">Class Enrolled:</label>
+                <fieldset>
+                    <input type="checkbox" id="service1" name="services" value="service1">
+                    <label for="service1">COS 111</label><br>
+                    <input type="checkbox" id="service2" name="services" value="service2">
+                    <label for="service2">COS 222</label><br>
+                    <input type="checkbox" id="service3" name="services" value="service3">
+                    <label for="service3">COS 333</label>
+                </fieldset>
+            </div>
+
+            <div>
+                <label for="comments">Additional Comments:</label>
+                <textarea id="comments" name="comments" rows="4"></textarea>
+            </div>
+
+            <div>
+                <button type="submit">Submit Feedback</button>
+            </div>
+
+        </form>
+    </main>
+</body>
+</html>
