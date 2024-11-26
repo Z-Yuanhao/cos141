@@ -164,7 +164,21 @@ def profile():
     # user is not loggedin redirect to login page
     return redirect(url_for("login"))
 
-
+@app.route("/newsletter", methods=["GET", "POST"])
+def newsletter():
+    if request.method == "POST":
+        fullname = request.form["fullname"]
+        email = request.form["email"]
+        conn = mysql.connect()
+        cursor = cursor(pymysql.cursors.DictCursor)
+        cursor.execute(
+            "INSERT INTO users VALUES (NULL,%s,%s)",
+            (fullname,email),
+        )
+        conn.commit()
+    else:
+        fullname = "YHZ"
+    return render_template("newsletter.html", fullname = fullname)
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port = 8081)
