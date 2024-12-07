@@ -101,14 +101,17 @@ def register():
             msg = "Invalid email address!"
         elif not re.match(r"[A-Za-z0-9]+", username):
             msg = "Username must contain only characters and numbers!"
+        elif not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.$!%*?&])[A-Za-z\d@.$!%*?&]{8,}$', password):
+            msg = "Password must be 8+ characters with uppercase, lowercase, number, and special character!"
         elif not username or not password or not email:
-            msg = "Please fill out the form!"
+            msg = "Please fill out each sections!"
         else:
             # account doesnt exists and the form data is valid, now insert new account into accounts table
             cursor.execute(
-                "INSERT INTO accounts VALUES (NULL, %s, %s, %s, %s)",
+                "INSERT INTO accounts (fullname, username, password, email) VALUES (%s, %s, %s, %s)",
                 (fullname, username, password, email),
             )
+
 
             conn.commit()
             msg = "You have successfully registered!"
@@ -164,21 +167,52 @@ def profile():
     # user is not loggedin redirect to login page
     return redirect(url_for("login"))
 
-@app.route("/newsletter", methods=["GET", "POST"])
-def newsletter():
+@app.route("/settings", methods=["GET", "POST"])
+def settings():
+    # Connect to the database
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+    # Initialize a message variable
+    msg = ""
+
+    # Check if the user is logged in (e.g., using session or another method)
+    # Assume the session has the current user's username
+    if "username" not in session:
+        return redirect(url_for("login"))  # Redirect to login if not logged in
+    
+    username = session["username"]  # Get the logged-in user's username
+
+    # If the form is submitted via POST
     if request.method == "POST":
-        fullname = request.form["fullname"]
-        email = request.form["email"]
-        conn = mysql.connect()
-        cursor = cursor(pymysql.cursors.DictCursor)
-        cursor.execute(
-            "INSERT INTO users VALUES (NULL,%s,%s)",
-            (fullname,email),
-        )
-        conn.commit()
-    else:
-        fullname = "YHZ"
-    return render_template("newsletter.html", fullname = fullname)
+        # Retrieve form data for password and email
+        new_email = request.form.get("email")
+        new_password = request.form.get("password")
+
+        # Validate the email format
+        if new_email and not re.match(r"[^@]+@[^@]+\.[^@]+", new_email):
+            msg = "Invalid email address!"
+        # Validate the password format
+        elif not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.$!%*?&])[A-Za-z\d@.$!%*?&]{8,}$', new_password):
+            msg = "Password must be 8+ characters with uppercase, lowercase, number, and special character!"
+        else:
+            # If email or password is provided, update the user's record in the database
+            if new_email:
+                cursor.execute("UPDATE accounts SET email = %s WHERE username = %s", (new_email, username))
+            
+            if new_password:
+                cursor.execute("UPDATE accounts SET password = %s WHERE username = %s", (new_password, username))
+            
+            conn.commit()
+            return redirect(url_for("profile"))
+
+    # Retrieve the current details of the user
+    cursor.execute("SELECT * FROM accounts WHERE username = %s", (username,))
+    account = cursor.fetchone()
+
+    # Show settings form with the current email and password (only display email, password should not be shown for security reasons)
+    return render_template("settings.html", msg=msg, account=account)
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port = 8081)

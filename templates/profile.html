@@ -2,28 +2,104 @@
 {% block title %} Profile {% endblock %} 
 {% block content %}
 
-<p>Profile Page</p>
-<div>
-    <p>Your account details are below:</p>
+<style>
+    .center_div{
+        width: 75%; /* Default: 75% of the page width */
+        max-width: 400px; /* Prevents the div from becoming too wide */
+        margin: 0 auto; /* Centers the div horizontally */
+        text-align: center;
+        margin-top: 10vh; /* Adjusts the vertical margin relative to the viewport height */
+    
+        /* Responsive height */
+        height: 19vh; /* 40% of the viewport height */
+        max-height: 400px; /* Limits height for larger screens */
+        min-height: 200px; /* Ensures a practical minimum height */
+    
+        background-color: white; /* White rectangle background */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Fading shadow as border */
+        overflow: hidden;
+    }
+    .bold_font{
+        font-weight: bold;
+        margin-top: 9%;
+        margin-bottom: 3%;   
+    }
+    table {
+        width: 100%; /* Table spans the full width of the parent container */
+        border-collapse: collapse; /* Remove gaps between table cells */
+    }
 
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td>{{ account['fullname'] }}</td>
-        </tr>
-        <tr>
-            <td>Username:</td>
-            <td>{{ account['username'] }}</td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td>{{ account['password'] }}</td>
-        </tr>
-        <tr>
-            <td>Email:</td>
-            <td>{{ account['email'] }}</td>
-        </tr>
-    </table>
+    td {
+        padding: 5px;
+        padding-left: 20px; /* Add reasonable padding for better spacing */
+        padding-right: 20px; /* Add reasonable padding for better spacing */
+        vertical-align: top; /* Align content to the top of cells */
+    }
 
+    td:first-child {
+        font-weight: bold; /* Make the first column bold */
+        text-align: left; /* Align titles to the left */
+        width: 30%; /* Allocate a reasonable width for the title column */
+    }
+
+    td:last-child {
+        font-weight: normal; /* Make the second column normal weight */
+        text-align: right; /* Align values to the right */
+        width: 70%; /* Allocate more width to the value column */
+    }
+    .password {
+        display: inline-block;
+        position: relative;
+    }
+
+    .password::before {
+        content: "[Hidden]"; /* Hidden unless mouse hover*/
+        display: block;
+    }
+
+    .password:hover::before {
+        content: "{{ account['password'] }}"; /* Show the actual password when hovered */
+    }
+    a.logout-button {
+        display: inline-block;
+        padding: 10px 20px; /* Add padding for button size */
+        background-color: rgba(241, 20, 20, 0.834); /* Red background color */
+        color: white; /* White text */
+        text-decoration: none; /* Remove the underline */
+        font-weight: bold; /* Make the text bold */
+        border-radius: 5px; /* Optional: rounded corners */
+        text-align: center; /* Center align text */
+        transition: background-color 0.3s ease; /* Smooth background color transition on hover */
+    }
+
+    a.logout-button:hover {
+        background-color: darkred; /* Darken the button on hover */
+    }
+</style>
+
+<div class="center_div">
+    <h2 class="bold_font">User Profile</h2>
+    <div style="padding-bottom: 3%">
+        <table>
+            <tr>
+                <td>Name:</td>
+                <td>{{ account['fullname'] }}</td>
+            </tr>
+            <tr>
+                <td>Username:</td>
+                <td>{{ account['username'] }}</td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><span class="password"></span></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>{{ account['email'] }}</td>
+            </tr>
+        </table>
+    </div>
+    <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 </div>
 {% endblock %}

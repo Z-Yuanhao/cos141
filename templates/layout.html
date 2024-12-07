@@ -1,13 +1,54 @@
 <html>
-    <head><title>{% block title %}{% endblock %}</title></head>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #e6e7e9;
+            }      
+        
+            .navbar {
+                background-color: #333; /* Dark banner color */
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 50px; /* Adjust height as needed */
+                width: 100%; /* Make it span the entire width */
+                position: fixed; /* Keep it at the top while scrolling */
+                top: 0;
+                z-index: 1000; /* Ensure it's above other content */
+            }
+        
+            .navbar a {
+                color: white;
+                text-decoration: none;
+                margin: 0 15px; /* Spacing between links */
+                font-weight: 400; /* Thin font */
+            }
+        
+            .navbar a:hover {
+                text-decoration: underline; /* Optional hover effect */
+            }
+        
+            .content {
+                padding-top: 60px; /* Prevent content from overlapping the navbar */
+            }
+        </style>
+    </head>
     
     <body>
+        <div class="navbar">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('profile') }}">Profile</a>
+            <a href="{{ url_for('settings') }}">Settings</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
 
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('profile') }}">Profile</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
-        
-        {% block content %}{% endblock %}
-
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
     </body>
 </html>
