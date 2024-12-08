@@ -74,7 +74,32 @@
             
     </style>
     </head>
-
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+            const passwordInput = document.getElementById("password");
+            const msgDiv = document.getElementById("msg");
+    
+            form.addEventListener("submit", (event) => {
+                let msg = "";
+    
+                // Validate password
+                const passwordPattern =
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.$!%*?&])[A-Za-z\d@.$!%*?&]{8,}$/;
+                if (!passwordPattern.test(passwordInput.value)) {
+                    msg =
+                        "Password must be 8+ characters with uppercase, lowercase, number, and special character!";
+                    event.preventDefault(); // Prevent form submission
+                }
+    
+                // Show the message if there are any errors
+                if (msg) {
+                    msgDiv.textContent = msg;
+                    msgDiv.style.color = "red";
+                }
+            });
+        });
+    </script>
     <body>
         <div class="center_div">
             <h2 class="bold_font">[Feitian College] Signup</h2>
