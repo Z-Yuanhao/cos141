@@ -97,12 +97,14 @@ def register():
         # if account exists show error and validation checks
         if account:
             msg = "Account already exists!"
-        elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            msg = "Invalid email address!"
+        #Validation through javascript in register.html
+        #elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            #msg = "Invalid email address!"
         elif not re.match(r"[A-Za-z0-9]+", username):
             msg = "Username must contain only characters and numbers!"
-        elif not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.$!%*?&])[A-Za-z\d@.$!%*?&]{8,}$', password):
-            msg = "Password must be 8+ characters with uppercase, lowercase, number, and special character!"
+        #Validation through javascript in register.html
+        #elif not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.$!%*?&])[A-Za-z\d@.$!%*?&]{8,}$', password):
+           # msg = "Password must be 8+ characters with uppercase, lowercase, number, and special character!"
         elif not username or not password or not email:
             msg = "Please fill out each sections!"
         else:
@@ -173,45 +175,38 @@ def settings():
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
 
-    # Initialize a message variable
-    msg = ""
-
-    # Check if the user is logged in (e.g., using session or another method)
-    # Assume the session has the current user's username
+    # Check if the user is logged in
     if "username" not in session:
         return redirect(url_for("login"))  # Redirect to login if not logged in
-    
+
     username = session["username"]  # Get the logged-in user's username
 
-    # If the form is submitted via POST
-    if request.method == "POST":
-        # Retrieve form data for password and email
-        new_email = request.form.get("email")
-        new_password = request.form.get("password")
-
-        # Validate the email format
-        if new_email and not re.match(r"[^@]+@[^@]+\.[^@]+", new_email):
-            msg = "Invalid email address!"
-        # Validate the password format
-        elif not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.$!%*?&])[A-Za-z\d@.$!%*?&]{8,}$', new_password):
-            msg = "Password must be 8+ characters with uppercase, lowercase, number, and special character!"
-        else:
-            # If email or password is provided, update the user's record in the database
-            if new_email:
-                cursor.execute("UPDATE accounts SET email = %s WHERE username = %s", (new_email, username))
-            
-            if new_password:
-                cursor.execute("UPDATE accounts SET password = %s WHERE username = %s", (new_password, username))
-            
-            conn.commit()
-            return redirect(url_for("profile"))
-
-    # Retrieve the current details of the user
+    # Retrieve the current user details
     cursor.execute("SELECT * FROM accounts WHERE username = %s", (username,))
     account = cursor.fetchone()
 
-    # Show settings form with the current email and password (only display email, password should not be shown for security reasons)
-    return render_template("settings.html", msg=msg, account=account)
+    # If the form is submitted via POST
+    if request.method == "POST":
+        # Retrieve form data for email and password
+        new_email = request.form.get("email")
+        new_password = request.form.get("password")
+
+        # Update email if provided
+        if new_email:
+            cursor.execute("UPDATE accounts SET email = %s WHERE username = %s", (new_email, username))
+
+        # Update password if provided
+        if new_password:
+            cursor.execute("UPDATE accounts SET password = %s WHERE username = %s", (new_password, username))
+
+        conn.commit()
+
+        # Redirect to profile page once settings are updated
+        return redirect(url_for("profile"))
+
+    # Show settings form with the current email
+    return render_template("settings.html", account=account)
+
 
 
 if __name__ == "__main__":

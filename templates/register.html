@@ -49,7 +49,7 @@
                 margin-top: 10vh; /* Adjusts the vertical margin relative to the viewport height */
             
                 /* Responsive height */
-                height: 33vh; /* 40% of the viewport height */
+                height: 54%;
                 max-height: 470px; /* Limits height for larger screens */
                 min-height: 200px; /* Ensures a practical minimum height */
             
@@ -77,11 +77,19 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.querySelector("form");
+            const emailInput = document.getElementById("email");
             const passwordInput = document.getElementById("password");
             const msgDiv = document.getElementById("msg");
     
             form.addEventListener("submit", (event) => {
                 let msg = "";
+    
+                // Validate email
+                const emailPattern = /^[^@]+@[^@]+\.[^@]+$/;
+                if (!emailPattern.test(emailInput.value)) {
+                    msg = "Invalid email address!";
+                    event.preventDefault(); // Prevent form submission
+                }
     
                 // Validate password
                 const passwordPattern =
@@ -89,7 +97,7 @@
                 if (!passwordPattern.test(passwordInput.value)) {
                     msg =
                         "Password must be 8+ characters with uppercase, lowercase, number, and special character!";
-                    event.preventDefault(); // Prevent form submission
+                    event.preventDefault();
                 }
     
                 // Show the message if there are any errors
@@ -100,6 +108,7 @@
             });
         });
     </script>
+    
     <body>
         <div class="center_div">
             <h2 class="bold_font">[Feitian College] Signup</h2>
